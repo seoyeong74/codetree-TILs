@@ -47,9 +47,11 @@ public class Main {
         int time = 1;
         while(time <= K){
             move();
+            // System.out.println(hlist.size());
+            if (hlist.isEmpty()) break;
+            // System.out.println(ulx + " " + uly + " " + min_length);
             rotation();
 
-            if (hlist.isEmpty()) break;
             time++;
         }
 
