@@ -125,7 +125,7 @@ public class Main {
                 removed = r.removed;
             }
 
-            System.out.println(ans);
+            System.out.print(ans + " ");
         }
     }
 
