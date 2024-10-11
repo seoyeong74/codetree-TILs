@@ -16,25 +16,6 @@ public class Main {
             }
         }
 
-        // int[][] test_map = rotate_90(1, 1);
-        // for(int i = 0; i < 5; i++){
-        //     for(int j = 0; j< 5; j++){
-        //         System.out.print(test_map[i][j] + " ");
-        //     }
-        //     System.out.println();
-        // }
-        // System.out.println();
-
-        // Result test_result = get_num(test_map);
-        // for(int i = 0; i < 5; i++){
-        //     for(int j = 0; j< 5; j++){
-        //         System.out.print(test_map[i][j] + " ");
-        //     }
-        //     System.out.println();
-        // }
-        // System.out.println();
-
-
         for(int i = 0; i < M; i++){
             int m = sc.nextInt();
             num_q.add(m);
@@ -43,37 +24,39 @@ public class Main {
         for(int k = 0; k < K; k++){
             int[][] max_new_map = new int[5][5];
             int max_num = 0;
-            int max_rotate = 360;
+            int min_rotate = 4;
+            int min_i= 6, min_j = 6;
             ArrayList<Point> removed = new ArrayList<>();
 
-            for(int i = 0; i < 3; i++){
-                for(int j = 0; j < 3; j++){
-                    int[][] r90_map = rotate_90(i,j);
-                    int[][] r180_map = rotate_180(i,j);
-                    int[][] r270_map = rotate_270(i,j);
+            for(int ro = 0; ro < 3; ro++){
+                for(int i = 0; i < 3; i++){
+                    for(int j = 0; j < 3; j++){ 
+                        Result r = new Result();
+                        if (ro== 0){
+                            r = get_num(rotate_90(i, j));
+                        }
+                        else if(ro==1){
+                            r = get_num(rotate_180(i, j));
+                        }
+                        else if (ro==2){
+                            r = get_num(rotate_270(i, j));
+                        }
+                        
 
-                    Result r90 = get_num(r90_map);
-                    Result r180 = get_num(r180_map);
-                    Result r270 = get_num(r270_map);
-
-                    if (max_num < r90.num || (max_num == r90.num && max_rotate > 90)){
-                        max_new_map = r90.new_map;
-                        max_num = r90.num;
-                        removed = r90.removed;
-                        max_rotate = 90;
+                        if (
+                            max_num < r.num ||
+                            (max_num == r.num && min_rotate > ro) ||
+                            (max_num == r.num && min_rotate == ro && min_j > j) ||
+                            (max_num == r.num && min_rotate == ro && min_j == j && min_i > i) 
+                        ){
+                            max_num = r.num;
+                            max_new_map = r.new_map;
+                            min_rotate = ro;
+                            min_i = i;
+                            min_j = j;
+                            removed = r.removed;
+                        }
                     }
-                    if (max_num < r180.num || (max_num == r90.num && max_rotate > 180)){
-                        max_new_map = r180.new_map;
-                        max_num = r180.num;
-                        removed = r180.removed;
-                        max_rotate = 180;
-                    }
-                    if (max_num < r270.num || (max_num == r90.num && max_rotate > 270)){
-                        max_new_map = r270.new_map;
-                        max_num = r270.num;
-                        removed = r270.removed;
-                        max_rotate = 270;
-                    } 
                 }
             }
 
@@ -91,6 +74,7 @@ public class Main {
                 //     System.out.println();
                 // }
                 // System.out.println();
+
                 removed.sort(new Comparator<Point>(){
                     @Override
                     public int compare(Point o1, Point o2){
@@ -138,7 +122,10 @@ public class Main {
             this.num = num;
             this.removed = list;
         }
-    }
+        Result(){
+
+        }
+    };
 
     static class Point{
         int x, y;
@@ -256,13 +243,14 @@ public class Main {
     public static int[][] rotate_270(int sx, int sy){
         boolean[][] visited = new boolean[5][5];
         int[][] new_map = new int[5][5];
-        //90도 회전
+        //270도 회전
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
-                int new_x = sy + (2-j);
-                int new_y = sx + i;
+                int new_x = sx + (2-j);
+                int new_y = sy + i;
                 visited[sx + i][sy + j] = true;
                 new_map[new_x][new_y] = map[sx+i][sy+j];
+                // System.out.println(new_x +)
             }
         }
 
@@ -272,6 +260,14 @@ public class Main {
                 new_map[i][j] = map[i][j];
             }
         }
+
+        // for(int i_ = 0; i_ < 5; i_++){
+        //     for(int j_ = 0; j_< 5; j_++){
+        //         System.out.print(new_map[i_][j_] + " ");
+        //     }
+        //     System.out.println();
+        // }
+        // System.out.println();
 
         return new_map;
     }
